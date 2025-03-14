@@ -28,14 +28,6 @@
                 <label for="description" class="form-label">Mô tả</label>
                 <textarea class="form-control" id="description" name="description" rows="5" required>{{ task.description }}</textarea>
             </div>
-            <div class="mb-3">
-                <label for="assigned_to" class="form-label">Người thực hiện</label>
-                <select class="form-select" id="assigned_to" name="assigned_to" required>
-                    {% for user in users %}
-                    <option value="{{ user.id }}" {% if user.id == task.assigned_to.id %}selected{% endif %}>{{ user.username }}</option>
-                    {% endfor %}
-                </select>
-            </div>
             <!-- {% endif %} -->
             
             <div class="mb-3">
