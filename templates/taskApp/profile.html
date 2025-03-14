@@ -1,0 +1,82 @@
+{% extends 'taskApp/base.html' %}
+{% block title %}Thông tin cá nhân{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Thông tin cá nhân</h1>
+    <div>
+        <a href="{% url 'change_password' %}" class="btn btn-warning">Đổi mật khẩu</a>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary ms-2">Quay lại</a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Phần avatar -->
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Ảnh đại diện</h5>
+            </div>
+            <div class="card-body text-center">
+                {% if user.profile.avatar %}
+                <img src="{{ user.profile.avatar.url }}" alt="Avatar" class="img-fluid rounded-circle mb-3" style="max-width: 200px; max-height: 200px;">
+                {% else %}
+                <img src="https://via.placeholder.com/200" alt="Default Avatar" class="img-fluid rounded-circle mb-3">
+                {% endif %}
+                
+                <form method="POST" enctype="multipart/form-data" id="avatar-form">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <input type="file" name="avatar" id="avatar" class="form-control" accept="image/*">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Cập nhật ảnh</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Phần thông tin cá nhân -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Thông tin cá nhân</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="first_name" class="form-label">Tên</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user.first_name }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="last_name" class="form-label">Họ</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user.last_name }}">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Tên đăng nhập</label>
+                        <input type="text" class="form-control" id="username" value="{{ user.username }}" readonly>
+                        <div class="form-text">Tên đăng nhập không thể thay đổi.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Số điện thoại</label>
+                        <input type="text" class="form-control" id="phone" name="phone" value="{{ user.profile.phone }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="bio" class="form-label">Giới thiệu</label>
+                        <textarea class="form-control" id="bio" name="bio" rows="4">{{ user.profile.bio }}</textarea>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">Lưu thông tin</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'taskApp/base.html' %}
+{% block title %}Danh sách công việc{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Danh sách công việc</h1>
+    {% if user.is_staff %}
+    <a href="{% url 'task_create' %}" class="btn btn-success">Tạo công việc mới</a>
+    {% endif %}
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Lọc công việc</h5>
+    </div>
+    <div class="card-body">
+        <form method="GET" class="row g-3">
+            <div class="col-md-3">
+                <label for="status" class="form-label">Trạng thái</label>
+                <select class="form-select" id="status" name="status">
+                    <option value="">Tất cả</option>
+                    <option value="pending" {% if request.GET.status == 'pending' %}selected{% endif %}>Đang chờ</option>
+                    <option value="in_progress" {% if request.GET.status == 'in_progress' %}selected{% endif %}>Đang thực hiện</option>
+                    <option value="completed" {% if request.GET.status == 'completed' %}selected{% endif %}>Hoàn thành</option>
+                    <option value="cancelled" {% if request.GET.status == 'cancelled' %}selected{% endif %}>Đã hủy</option>
+                </select>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary">Lọc</button>
+                <a href="{% url 'task_list' %}" class="btn btn-secondary ms-2">Đặt lại</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        {% for task in tasks %}
+        <div class="card task-card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">{{ task.title }}</h5>
+                <span class="status-badge status-{{ task.status }}">
+                    {{ task.get_status_display }}
+                </span>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-9">
+                        <p class="mb-2">{{ task.description|truncatechars:150 }}</p>
+                    </div>
+                    <div class="col-md-3">
+                        <p class="text-muted mb-2">
+                            <strong>Người thực hiện:</strong> {{ task.assigned_to.username }}
+                        </p>
+                        <p class="text-muted mb-2">
+                            <strong>Ngày tạo:</strong> {{ task.created|date:"d/m/Y H:i" }}
+                        </p>
+                        {% if task.finished %}
+                        <p class="text-muted mb-2">
+                            <strong>Ngày hoàn thành:</strong> {{ task.finished|date:"d/m/Y H:i" }}
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-end">
+                    <a href="{% url 'task_detail' task_id=task.id %}" class="btn btn-info btn-sm me-2">Chi tiết</a>
+                    <a href="{% url 'task_update' task_id=task.id %}" class="btn btn-warning btn-sm me-2">Cập nhật</a>
+                    {% if user.is_staff %}
+                    <a href="{% url 'task_delete' task_id=task.id %}" class="btn btn-danger btn-sm">Xóa</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="alert alert-info">
+            Không tìm thấy công việc nào. {% if user.is_staff %}<a href="{% url 'task_create' %}">Tạo công việc mới</a>{% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

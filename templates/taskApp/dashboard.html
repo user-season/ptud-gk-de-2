@@ -1,0 +1,130 @@
+{% extends 'taskApp/base.html' %}
+{% block title %}Bảng điều khiển{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Bảng điều khiển</h1>
+    <a href="{% url 'profile' %}" class="btn btn-primary">
+        <i class="fas fa-user"></i> Trang cá nhân
+    </a>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <a href="{% url 'task_create' %}" class="btn btn-success">
+            <i class="fas fa-plus"></i> Tạo công việc mới
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="dashboard-stat stat-pending">
+            <h3>{{ pending_count }}</h3>
+            <p>Đang chờ</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="dashboard-stat stat-in-progress">
+            <h3>{{ in_progress_count }}</h3>
+            <p>Đang thực hiện</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="dashboard-stat stat-completed">
+            <h3>{{ completed_count }}</h3>
+            <p>Hoàn thành</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="dashboard-stat stat-cancelled">
+            <h3>{{ cancelled_count }}</h3>
+            <p>Đã hủy</p>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Công việc gần đây</h5>
+                <a href="{% url 'task_list' %}" class="btn btn-primary btn-sm">Xem tất cả</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Tiêu đề</th>
+                                <th>Trạng thái</th>
+                                <th>Người tạo</th>
+                                <th>Ngày tạo</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in tasks|slice:":5" %}
+                            <tr {% if task.is_late %}class="table-danger"{% endif %}>
+                                <td>{{ task.title }}</td>
+                                <td>
+                                    <span class="status-badge status-{{ task.status }}">
+                                        {{ task.get_status_display }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center position-relative">
+                                        <div class="position-relative">
+                                            {% if task.author.profile.avatar %}
+                                            <img src="{{ task.author.profile.avatar.url }}" alt="{{ task.author.username }}" class="rounded-circle me-2" style="width: 30px; height: 30px;">
+                                            {% else %}
+                                            <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-2" style="width: 30px; height: 30px;">
+                                                {{ task.author.username|first|upper }}
+                                            </div>
+                                            {% endif %}
+                                            
+                                            {% if task.is_late %}
+                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" 
+                                                  data-bs-toggle="tooltip" data-bs-placement="top" title="Công việc {{task.title}} trễ hạn!">
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                                <span class="visually-hidden">Trễ hạn</span>
+                                            </span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="ms-2">
+                                            <div>{{ task.author.username }}</div>
+                                            {% if task.is_late %}
+                                            <small class="text-danger fw-bold">Trễ hạn</small>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ task.created|date:"d/m/Y H:i" }}</td>
+                                <td>
+                                    <a href="{% url 'task_detail' task_id=task.id %}" class="btn btn-sm btn-info">Chi tiết</a>
+                                    <a href="{% url 'task_update' task_id=task.id %}" class="btn btn-sm btn-warning">Sửa</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">Không có công việc nào</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Script để kích hoạt tooltip Bootstrap -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
+{% endblock %}

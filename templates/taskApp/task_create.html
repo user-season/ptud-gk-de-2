@@ -1,0 +1,42 @@
+{% extends 'taskApp/base.html' %}
+{% block title %}Tạo công việc mới{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Tạo công việc mới</h1>
+    <a href="{% url 'task_list' %}" class="btn btn-secondary">Quay lại</a>
+</div>
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Thông tin công việc</h5>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="title" class="form-label">Tiêu đề</label>
+                <input type="text" class="form-control" id="title" name="title" required>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Mô tả</label>
+                <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="status" class="form-label">Trạng thái</label>
+                <select class="form-select" id="status" name="status" required>
+                    {% for value, label in status_choices %}
+                    <option value="{{ value }}">{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="target_date" class="form-label">Mục tiêu hoàn thành</label>
+                <input type="date" class="form-control" id="target_date" name="target_date">
+                <div class="form-text">Ngày dự kiến hoàn thành công việc này</div>
+            </div>
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-success">Tạo công việc</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
