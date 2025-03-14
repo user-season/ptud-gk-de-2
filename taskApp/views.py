@@ -174,30 +174,30 @@ def task_update(request, task_id):
     #     messages.error(request, 'Bạn không có quyền cập nhật công việc này.')
     #     return redirect('dashboard')
     
-    if request.method == 'POST':
-        title = request.POST.get('title')
-        description = request.POST.get('description')
-        status = request.POST.get('status')
+    # if request.method == 'POST':
+    #     title = request.POST.get('title')
+    #     description = request.POST.get('description')
+    #     status = request.POST.get('status')
         
-        if not all([title, description, status]):
-            messages.error(request, 'Vui lòng điền đầy đủ thông tin.')
-            return render(request, 'taskApp/task_update.html', {
-                'task': task,
-                'status_choices': Task.STATUS_CHOICES,
-                'is_new': False
-            })
+    #     if not all([title, description, status]):
+    #         messages.error(request, 'Vui lòng điền đầy đủ thông tin.')
+    #         return render(request, 'taskApp/task_update.html', {
+    #             'task': task,
+    #             'status_choices': Task.STATUS_CHOICES,
+    #             'is_new': False
+    #         })
         
-        task.title = title
-        task.description = description
-        task.status = status
+    #     task.title = title
+    #     task.description = description
+    #     task.status = status
         
-        # Nếu trạng thái là hoàn thành, cập nhật ngày hoàn thành
-        if status == 'completed' and not task.finished:
-            task.finished = timezone.now()
+    #     # Nếu trạng thái là hoàn thành, cập nhật ngày hoàn thành
+    #     if status == 'completed' and not task.finished:
+    #         task.finished = timezone.now()
         
-        task.save()
-        messages.success(request, 'Cập nhật công việc thành công!')
-        return redirect('task_detail', task_id=task.id)
+    #     task.save()
+    #     messages.success(request, 'Cập nhật công việc thành công!')
+    #     return redirect('task_detail', task_id=task.id)
     
     return render(request, 'taskApp/task_update.html', {
         'task': task,

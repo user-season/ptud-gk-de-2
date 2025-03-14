@@ -8,29 +8,6 @@
     {% endif %}
 </div>
 
-<div class="card mb-4">
-    <div class="card-header">
-        <h5 class="mb-0">Lọc công việc</h5>
-    </div>
-    <div class="card-body">
-        <form method="GET" class="row g-3">
-            <div class="col-md-3">
-                <label for="status" class="form-label">Trạng thái</label>
-                <select class="form-select" id="status" name="status">
-                    <option value="">Tất cả</option>
-                    <option value="pending" {% if request.GET.status == 'pending' %}selected{% endif %}>Đang chờ</option>
-                    <option value="in_progress" {% if request.GET.status == 'in_progress' %}selected{% endif %}>Đang thực hiện</option>
-                    <option value="completed" {% if request.GET.status == 'completed' %}selected{% endif %}>Hoàn thành</option>
-                    <option value="cancelled" {% if request.GET.status == 'cancelled' %}selected{% endif %}>Đã hủy</option>
-                </select>
-            </div>
-            <div class="col-md-3 d-flex align-items-end">
-                <button type="submit" class="btn btn-primary">Lọc</button>
-                <a href="{% url 'task_list' %}" class="btn btn-secondary ms-2">Đặt lại</a>
-            </div>
-        </form>
-    </div>
-</div>
 
 <div class="row">
     <div class="col-md-12">
