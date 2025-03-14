@@ -112,7 +112,7 @@ def task_detail(request, task_id):
     task = get_object_or_404(Task, id=task_id)
     
     # Kiểm tra quyền xem công việc
-    if task.author != request.user and not request.user.is_staff:
+    if task.author != request.user:
         messages.error(request, 'Bạn không có quyền xem công việc này.')
         return redirect('dashboard')
     
@@ -170,9 +170,9 @@ def task_update(request, task_id):
     task = get_object_or_404(Task, id=task_id)
     
     # Kiểm tra quyền cập nhật: chỉ người tạo hoặc admin
-    if task.author != request.user and not request.user.is_staff:
-        messages.error(request, 'Bạn không có quyền cập nhật công việc này.')
-        return redirect('dashboard')
+    # if task.author != request.user and not request.user.is_staff:
+    #     messages.error(request, 'Bạn không có quyền cập nhật công việc này.')
+    #     return redirect('dashboard')
     
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -181,7 +181,7 @@ def task_update(request, task_id):
         
         if not all([title, description, status]):
             messages.error(request, 'Vui lòng điền đầy đủ thông tin.')
-            return render(request, 'taskApp/task_create.html', {
+            return render(request, 'taskApp/task_update.html', {
                 'task': task,
                 'status_choices': Task.STATUS_CHOICES,
                 'is_new': False
@@ -199,7 +199,7 @@ def task_update(request, task_id):
         messages.success(request, 'Cập nhật công việc thành công!')
         return redirect('task_detail', task_id=task.id)
     
-    return render(request, 'taskApp/task_create.html', {
+    return render(request, 'taskApp/task_update.html', {
         'task': task,
         'status_choices': Task.STATUS_CHOICES,
         'is_new': False
@@ -212,7 +212,7 @@ def task_delete(request, task_id):
     task = get_object_or_404(Task, id=task_id)
     
     # Kiểm tra quyền xóa: chỉ người tạo hoặc admin
-    if task.author != request.user and not request.user.is_staff:
+    if task.author != request.user:
         messages.error(request, 'Bạn không có quyền xóa công việc này.')
         return redirect('dashboard')
     

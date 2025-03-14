@@ -19,7 +19,7 @@
         <form method="POST">
             {% csrf_token %}
             
-            {% if user.is_staff %}
+            <!-- {% if user.is_authenticated %} -->
             <div class="mb-3">
                 <label for="title" class="form-label">Tiêu đề</label>
                 <input type="text" class="form-control" id="title" name="title" value="{{ task.title }}" required>
@@ -36,7 +36,7 @@
                     {% endfor %}
                 </select>
             </div>
-            {% endif %}
+            <!-- {% endif %} -->
             
             <div class="mb-3">
                 <label for="status" class="form-label">Trạng thái</label>
